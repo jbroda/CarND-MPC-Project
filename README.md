@@ -3,6 +3,52 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Describe the model in detail. This includes the state, actuators, and update equations.
+
+I use the Global Kinematic Model. 
+The state is composed of:
+* the global x position of the vehicle (x)
+* the global y position of the vehicle (y)
+* the orientation of the vehicle (psi)
+* the current speed (v)
+* the cross track error (CTE)
+* the orientation error (epsi)
+
+The actuators are:
+* the steering angle (delta)
+* the acceleration value (a)
+
+The update equations are taken from Lesson 18.5:
+
+![alt Model Equations](model_equations.png "Kinematic Model Equations")
+
+## Discuss the reasoning behind the chosen *N* (timestep length) and *dt* (elapsed duration between timsteps) values. Additionally, detail the previous values tried.
+
+*T* is the prediction horizon or the duration over which future predictions are made.
+*T* is the product of *N* and *dt*.
+*N* is the number of timesteps in the horizon.
+*dt* is how much time elapses between actuations.
+In the case of driving a car, *T* should be a few seconds.
+
+Initially, I selected N = 25 and dt = 0.05 resulting in T = 1.25s as given in Lesson 19.9,
+however the car oscillated to much and sometimes fell of the track. 
+I decreased N to 15 and the oscillations did not change much, so then I changed dt to 0.1.
+With N = 15 and dt = 0.1 (or T = 1.50s), the car was able to drive around the track. 
+
+
+## Polynomial Fitting
+
+I fitted a 2nd-order polynomial to the waypoints.
+
+
+## Describe details on how to deal with latency.
+
+A realistic delay might be on the order of 100 milliseconds.
+
+To deal with latency, I adjusted the state variables (x,psi,v,cte,epsi) by the delay amount using the vehicle model equations, before passing the state to the MPC.
+
+---
+
 ## Dependencies
 
 * cmake >= 3.5
